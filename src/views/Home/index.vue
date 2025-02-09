@@ -1,23 +1,11 @@
 <template>
   <div class="">
-    <!-- 导航栏 -->
-    <Navbar />
-    <div
-      class="flex-col justify-center items-center relative absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#e9e9e9] to-[rgba(233,233,233,0)]"
-    >
-      <!-- 空间名和等级 -->
-      <Title />
-      <!-- 主体内容 -->
-      <Banner />
-      <!-- 背景图 -->
-      <div class="absolute inset-0 bg-banner-gradient w-300 h-120"></div>
-    </div>
+    <!-- 主体内容 -->
+    <Banner />
   </div>
 </template>
 
 <script setup lang="ts">
-import Navbar from './components/Navbar.vue'
-import Title from './components/Title.vue'
 import Banner from './components/Banner.vue'
 import { onMounted } from 'vue'
 import { getInfoApi } from '../../api/user/index.ts'
@@ -49,26 +37,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-/* 渐变背景 */
-.bg-banner-gradient {
-  background:
-    /* 下方渐变 */
-    linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 70%,
-      rgba(255, 255, 255, 1) 100%
-    ),
-    /* 左右渐变 */
-      linear-gradient(
-        to right,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 0) 50%,
-        rgba(255, 255, 255, 1) 100%
-      ),
-    /* 背景图 */ url('@/assets/images/banner-bg.jpg') no-repeat center / cover;
-  z-index: -666;
-  position: absolute;
-  inset: 0;
-}
-</style>
+<style scoped></style>

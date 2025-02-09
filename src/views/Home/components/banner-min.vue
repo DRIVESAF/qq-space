@@ -320,19 +320,6 @@ const shuoshuoList = ref<ShuoshuoModel[]>([])
 const friendsList = ref<UserInfo[]>([])
 
 // 获取说说数据
-// const fetchShuoshuoList = async () => {
-//   try {
-//     const response: ShuoshuoResponse = await getUserAndFriendShuoshuoApi()
-//     if (response && response.data && Array.isArray(response.data)) {
-//       shuoshuoList.value = response.data
-//     } else {
-//       console.error('响应数据结构不符合预期')
-//     }
-//   } catch (error) {
-//     console.error('获取说说列表失败:', error)
-//   }
-// }
-
 const fetchShuoshuoList = async () => {
   try {
     let response: ShuoshuoResponse

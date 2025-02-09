@@ -1,13 +1,5 @@
 <template>
-  <div class="px-90 w-auto">
-    <!-- 功能区 -->
-    <div class="px-30 flex">
-      <div class="px-10 text-lg text-[#293233]">主页</div>
-      <div class="px-10 text-lg text-[#293233]">日志</div>
-      <div class="px-10 text-lg text-[#293233]">相册</div>
-      <div class="px-10 text-lg text-[#293233]">留言板</div>
-      <div class="px-10 text-lg text-[#293233]">说说</div>
-    </div>
+  <div class="mx-100 w-auto">
     <!-- 板块区 -->
     <div class="mt-8 flex justify-between">
       <left></left>

@@ -13,5 +13,5 @@ export interface ShuoshuoModel {
 export interface ShuoshuoResponse {
   code: number
   msg: string
-  data: ShuoshuoModel
+  data: ShuoshuoModel[]
 }

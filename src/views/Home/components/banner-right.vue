@@ -1,8 +1,8 @@
 <!-- banner-right.vue -->
 <template>
-  <div class="w-50 mx-6">
+  <div class="w-50 ml-6">
     <!-- 签到开始 -->
-    <div class="w-full h-25 flex">
+    <div class="w-full h-25 flex border-[1px] border-[#ddedf0] border-solid">
       <div
         class="bg-[#c7e5eb] w-20 h-full flex justify-center items-center flex-col"
       >
