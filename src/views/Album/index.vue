@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-[#dcf1f5] mx-40 px-20 w-auto mt-8">
-    <!-- Tab 切换 -->
+  <div class="bg-[#dcf1f5] mx-40 px-20 w-auto mt-8 pb-10">
+    <!-- Tab 切换开始 -->
     <div
       class="border-b-[#c7e5eb] border-b-solid border-b-[2px] flex justify-between items-center"
     >
@@ -46,6 +46,7 @@
         </div>
       </div>
     </div>
+    <!-- Tab 切换结束 -->
 
     <!-- Tab 内容开始 -->
     <!-- 相册内容 -->
