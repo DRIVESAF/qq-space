@@ -32,38 +32,32 @@ const routes = [
         path: '/album',
         name: 'Album',
         component: () => import('../views/Album/index.vue')
+      },
+      {
+        path: '/album/:id',
+        name: 'AlbumDetail',
+        component: () => import('../views/Album/album.vue')
       }
-      // 动态路由
-      // {
-      //   path: '/articles/:id',
-      //   name: 'ArticleDetail',
-      //   component: () => import('../views/ArticleDetail.vue'),
-      //   children: [
-      //     {
-      //       path: 'comments',
-      //       name: 'comments',
-      //       component: () => import('../views/Comment.vue')
-      //     }
-      //   ]
-      // }
-      // 嵌套路由
-      // {
-      //   path: '/user',
-      //   component: () => import('../views/UserDashboard.vue'),
-      //   redirect: '/user/profile',
-      //   children: [
-      //     {
-      //       path: 'profile',
-      //       name: 'UserProfile',
-      //       component: () => import('../views/UserProfile.vue')
-      //     },
-      //     {
-      //       path: 'setting',
-      //       name: 'UserSetting',
-      //       component: () => import('../views/UserSetting.vue')
-      //     }
-      //   ]
-      // }
+    ]
+  },
+  {
+    path: '/user',
+    name: 'UserProfileLayout',
+    component: () => import('../views/UserProfileLayout/index.vue'),
+    redirect: '/user',
+    children: [
+      {
+        path: ':id',
+        name: 'UserProfile',
+        component: () => import('../views/UserProfile/UserProfile.vue'),
+        meta: { requiresUserProfileLayout: true }
+      },
+      {
+        path: ':id/album',
+        name: 'UserAlbum',
+        component: () => import('../views/UserAlbum/index.vue'),
+        meta: { requiresUserProfileLayout: true }
+      }
     ]
   },
   {
@@ -85,6 +79,12 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+})
+
+// 路由跳转后滚动到顶部
+router.afterEach((to, from) => {
+  // 使用 window.scrollTo 将页面滚动到顶部
+  window.scrollTo(0, 0)
 })
 
 // 导出路由对象

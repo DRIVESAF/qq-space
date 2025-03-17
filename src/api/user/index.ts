@@ -1,9 +1,16 @@
 import http from '../../http'
 import type { UserInfoResponse, FriendListResponse } from './UserModel'
 
-// 获取用户信息
+// 获取登录用户信息
 export const getInfoApi = async (): Promise<UserInfoResponse> => {
   return await http.get('/user/info')
+}
+
+// 根据用户 ID 获取用户信息
+export const getUserInfoByIdApi = async (
+  userId: number
+): Promise<UserInfoResponse> => {
+  return await http.get(`/user/info/${userId}`)
 }
 
 // 发送短信验证码接口
@@ -30,4 +37,11 @@ export const passwordLogin = (qq_open_id: string, password: string) => {
 // 查询好友接口
 export const getUserFriendsApi = async (): Promise<FriendListResponse> => {
   return await http.get('/user/friends')
+}
+
+// 点赞说说接口
+export const likeShuoshuoApi = (shuoshuoId: number) => {
+  const params = new URLSearchParams()
+  params.append('shuoshuoId', shuoshuoId.toString())
+  return http.post('/user/shuoshuo/like', params)
 }

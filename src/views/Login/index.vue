@@ -229,8 +229,50 @@ onMounted(() => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  min-height: 800px; /* 设置最小高度，确保小屏幕时内容不会被压缩 */
+  overflow: auto; /* 当内容超出时允许滚动 */
 }
 
+/* 主体内容容器样式 */
+.w-300 {
+  min-width: 960px; /* 设置最小宽度，防止内容被挤压 */
+  max-width: 1200px; /* 设置最大宽度，防止在大屏幕上过宽 */
+  margin: 0 auto; /* 水平居中 */
+  padding: 0 20px; /* 添加左右内边距 */
+  box-sizing: border-box; /* 确保padding不会增加总宽度 */
+}
+
+/* 登录窗口响应式调整 */
+@media screen and (max-width: 1024px) {
+  .w-300 {
+    min-width: auto;
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .mt-30 {
+    margin-top: 60px;
+  }
+}
+
+/* 小屏幕适配 */
+@media screen and (max-width: 768px) {
+  .background-image {
+    min-height: 600px;
+  }
+
+  .w-130 {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .w-80 {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* 保持其他现有样式不变 */
 .cursor-pointer {
   cursor: pointer;
 }

@@ -6,7 +6,7 @@
         <div
           class="text-2xl text-[#157c8c] [text-shadow:1px_1px_2px_rgba(0,0,0,0.2)]"
         >
-          。的空间
+          {{ store.nickname }}的空间
         </div>
         <img src="@/assets/images/dengji.png" class="w-7 h-7 pl-3" />
       </div>
@@ -27,7 +27,7 @@
         <div
           class="w-35 h-35 flex justify-center items-center bg-white shadow-md"
         >
-          <img :src="avatar" class="w-33 h-33" />
+          <img :src="store.avatar" class="w-33 h-33" />
         </div>
         <div class="px-4 flex text-lg text-[#387c8c]"></div>
       </div>
@@ -72,21 +72,21 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '../../../store/user/index.ts'
+import { useFriendStore } from '../../../store/user/friend.ts'
 import { useRouter } from 'vue-router'
 
-const store = useUserStore()
-const avatar = store.avatar
-const nickname = store.nickname
+const store = useFriendStore()
+const userId = store.userInfo?.pkId
 
 const router = useRouter()
 
-const goToMain = () => {
-  router.push('/main')
+const goToPhotoAlbum = () => {
+  router.push(`/user/${userId}/album`)
 }
 
-const goToPhotoAlbum = () => {
-  router.push('/album')
+const goToMain = () => {
+  console.log('Current userInfo:', store.userInfo)
+  router.push(`/user/${store.userInfo?.pkId}`)
 }
 </script>
 

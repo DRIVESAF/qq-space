@@ -91,51 +91,11 @@
               </div>
               <div class="flex-col flex gap-2 px-3">
                 <!-- 昵称 -->
-                <div class="text-base">{{ shuoshuo.author }}</div>
+                <div class="text-base">{{ shuoshuo.nickname }}</div>
                 <!-- 发布时间 -->
                 <div class="text-[#8798a5] text-sm">
                   {{ formatDate(shuoshuo.createTime) }}
                 </div>
-              </div>
-            </div>
-            <div class="relative">
-              <!-- 点击图标触发显示下拉框 -->
-              <div
-                @click="toggleEdit(shuoshuo.pkId)"
-                class="iconfont icon-xiala pr-2 text-[#7a9599] cursor-pointer"
-              ></div>
-
-              <!-- 下拉框 -->
-              <div
-                v-if="activeDropdownId === shuoshuo.pkId"
-                class="absolute bg-white shadow-md mt-2 w-28 border border-gray-200 z-100"
-              >
-                <ul>
-                  <li
-                    @click="editPost(shuoshuo)"
-                    class="flex justify-center items-center"
-                  >
-                    <div
-                      class="iconfont icon-bianji scale-150 pr-2 text-[#7a9599] font-bold"
-                    ></div>
-                    <div class="text-sm">编辑</div>
-                  </li>
-                  <li @click="editTop" class="flex justify-center items-center">
-                    <div
-                      class="iconfont icon-zhiding scale-150 pr-2 text-[#7a9599]"
-                    ></div>
-                    <div class="text-sm">置顶</div>
-                  </li>
-                  <li
-                    @click="deletePost(shuoshuo.pkId)"
-                    class="flex justify-center items-center"
-                  >
-                    <div
-                      class="iconfont icon-icon-mianxing_fuzhi_shanchu scale-150 pr-2 text-[#7a9599]"
-                    ></div>
-                    <div class="text-sm">删除</div>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
@@ -215,8 +175,8 @@
             </div>
           </div>
           <!-- 评论 -->
-          <div class="p-2 flex items-center">
-            <input type="text" class="flex-grow h-7 mx-2 pinglunkuang" />
+          <div class="py-2 flex items-center">
+            <input type="text" class="flex-grow h-7 mx-1 pinglunkuang" />
           </div>
           <!-- 发表 -->
           <div class="flex items-center py-2">
@@ -289,163 +249,59 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import {
-  getUserShuoshuoApi,
-  deleteShuoshuoApi,
-  updateShuoshuoApi
-} from '../../api/shuoshuo/index'
-import { useUserStore } from '../../store/user/index.ts'
-import type {
-  ShuoshuoModel,
-  UpdateShuoshuoDTO
-} from '../../api/shuoshuo/ShuoshuoModel'
-import { useSearchStore } from '../../store/shuoshuo/index'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useFriendStore } from '../../store/user/friend' // 导入 friendStore
+import { getUserShuoshuoApi } from '../../api/shuoshuo/index'
+import { getCommentsApi } from '../../api/comment/index'
+import { getUserInfoByIdApi } from '../../api/user/index' // 导入新的获取用户信息的接口
 
-import { getCommentsApi } from '../../api/comment'
+const route = useRoute()
+const userId = Number(route.params.id) // 获取用户ID并转换为数字类型
+const shuoshuoList = ref([]) // 用户的说说列表
 
-// 获取评论列表
-const fetchComments = async (shuoshuoId: number) => {
+// 使用 friendStore
+const friendStore = useFriendStore()
+
+// 获取用户的说说以及评论
+const fetchUserShuoshuoList = async () => {
   try {
-    console.log('开始获取评论，说说ID:', shuoshuoId) // 添加这行日志
-    const response = await getCommentsApi(shuoshuoId)
-    console.log('获取评论返回数据:', response)
-
-    if (response.code === 0) {
-      const shuoshuo = shuoshuoList.value.find((s) => s.pkId === shuoshuoId)
-      if (shuoshuo) {
-        shuoshuo.comments = [...response.data]
-      }
-    }
-  } catch (error) {
-    console.error('获取评论失败:', error)
-  }
-}
-
-// 编辑相关的响应式变量
-const showEditModal = ref(false)
-const editForm = ref<UpdateShuoshuoDTO>({
-  pkId: 0,
-  content: '',
-  visibleScope: 1,
-  visibleUser: []
-})
-
-// 关闭编辑弹窗
-const closeEditModal = () => {
-  showEditModal.value = false
-  editForm.value = {
-    pkId: 0,
-    content: '',
-    visibleScope: 1,
-    visibleUser: []
-  }
-}
-
-// 提交编辑
-const submitEdit = async () => {
-  try {
-    const response = await updateShuoshuoApi(editForm.value)
-    if (response.code === 0) {
-      // 更新成功
-      await fetchShuoshuoList() // 重新获取说说列表
-      closeEditModal()
-    } else {
-      alert('更新失败：' + response.msg)
-    }
-  } catch (error) {
-    console.error('更新说说失败:', error)
-    alert('更新说说失败，请重试')
-  }
-}
-
-const searchStore = useSearchStore()
-// 获取用户 Store
-const store = useUserStore()
-// 说说列表数据
-const shuoshuoList = ref<ShuoshuoModel[]>([])
-
-// 获取说说数据
-const fetchShuoshuoList = async () => {
-  try {
-    // 从 Pinia 中获取用户信息
-    const authorId = store.userInfo.pkId
-
-    // 调用 API 获取说说列表
-    const response = await getUserShuoshuoApi(authorId)
-
-    // 将获取到的说说列表赋值给 shuoshuoList
-    shuoshuoList.value = response.data
-    console.log(shuoshuoList.value)
-  } catch (error) {
-    console.error('获取说说列表失败:', error)
-    alert('获取说说列表失败，请重试')
-  }
-}
-
-// 格式化日期
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
-  return date.toLocaleTimeString()
-}
-
-// 控制下拉框显示与隐藏
-const activeDropdownId = ref<number | null>(null)
-
-// 切换下拉框的显示状态
-const toggleEdit = (pkId: number) => {
-  activeDropdownId.value = activeDropdownId.value === pkId ? null : pkId
-}
-
-// 各个选项的点击事件
-const editPost = (shuoshuo: ShuoshuoModel) => {
-  editForm.value = {
-    pkId: shuoshuo.pkId,
-    content: shuoshuo.content,
-    visibleScope: 1, // 默认所有人可见
-    visibleUser: [] // 默认空数组
-  }
-  showEditModal.value = true
-}
-
-const editTop = () => {
-  // 在这里添加置顶说说的逻辑
-}
-
-// 删除说说
-const deletePost = async (shuoshuoId: number) => {
-  try {
-    await deleteShuoshuoApi(shuoshuoId)
-    // 删除成功后，刷新说说列表
-    await fetchShuoshuoList()
-    // 或者直接从列表中移除已删除的说说
-    shuoshuoList.value = shuoshuoList.value.filter(
-      (shuoshuo) => shuoshuo.pkId !== shuoshuoId
+    const response = await getUserShuoshuoApi(userId)
+    shuoshuoList.value = await Promise.all(
+      response.data.map(async (shuoshuo) => {
+        // 获取每个说说的评论
+        const commentsResponse = await getCommentsApi(shuoshuo.pkId)
+        return {
+          ...shuoshuo,
+          comments: commentsResponse.data // 将评论数据添加到说说中
+        }
+      })
     )
   } catch (error) {
-    console.error('删除说说失败:', error)
-    alert('删除说说失败，请重试')
+    console.error('获取用户说说失败:', error)
   }
 }
 
-// 监听搜索关键字变化
-watch(
-  () => searchStore.keyword,
-  () => {
-    fetchShuoshuoList()
+// 获取用户信息并存入 friendStore
+const fetchUserInfo = async () => {
+  try {
+    const response = await getUserInfoByIdApi(userId) // 调用新的获取用户信息的接口
+    friendStore.setUser(response.data) // 将用户信息存入 friendStore
+    console.log('用户信息已存入 friendStore:', response.data)
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
   }
-)
+}
 
-// 组件挂载时获取数据
-onMounted(async () => {
-  await fetchShuoshuoList() // 先获取说说列表
-  console.log('说说列表:', shuoshuoList.value) // 添加这行日志
+const formatDate = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleString()
+}
 
-  // 确保说说列表加载完成后再获取评论
-  shuoshuoList.value.forEach((shuoshuo) => {
-    console.log('正在获取说说的评论，说说ID:', shuoshuo.pkId) // 添加这行日志
-    fetchComments(shuoshuo.pkId)
-  })
+// 组件挂载时获取数据并设置 userId 到 friendStore
+onMounted(() => {
+  fetchUserInfo() // 获取用户信息并存入 friendStore
+  fetchUserShuoshuoList() // 获取用户的说说列表
 })
 </script>
 

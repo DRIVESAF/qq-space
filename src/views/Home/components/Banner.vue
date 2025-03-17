@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-100 w-auto">
+  <div class="flex items-center justify-center">
     <!-- 板块区 -->
     <div class="mt-8 flex justify-between">
       <left></left>

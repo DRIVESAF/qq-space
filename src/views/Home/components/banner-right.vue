@@ -18,7 +18,7 @@
     <!-- 浏览开始 -->
     <div class="w-full bg-white my-3 py-1">
       <!-- tab开始 -->
-      <div class="flex">
+      <div class="flex pt-1">
         <div
           class="text-sm px-1 border-r-[1px] border-r-solid border-r-[#dfedf2]"
         >

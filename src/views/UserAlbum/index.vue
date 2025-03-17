@@ -54,7 +54,7 @@
       <!-- 顶部操作栏 -->
       <div class="flex justify-between">
         <div class="flex py-5 gap-3">
-          <div
+          <!--           <div
             class="flex items-center bg-[#5ccfe6] px-4 py-2 border-[1px] border-[#47c3d6] border-solid text-white cursor-pointer"
             @click="showUploadModal"
           >
@@ -68,7 +68,7 @@
             @click="showCreateAlbumModal = true"
           >
             创建相册
-          </div>
+          </div> -->
         </div>
         <div class="flex items-center gap-4">
           <div class="text-sm">已用15.68M容量，开通黄钻获得更大容量</div>
@@ -435,7 +435,7 @@ import {
 } from '../../api/album'
 import { uploadPhotoApi, getUserPhotosApi } from '../../api/photo/index.ts'
 import type { PhotoAlbumModel } from '../../api/album/AlbumModel'
-import { useUserStore } from '../../store/user/index.ts'
+import { useFriendStore } from '../../store/user/friend.ts'
 import { usePhotoAlbumStore } from '../../store/album/index.ts'
 const photos = ref<PhotoModel[]>([])
 const activeTab = ref('album')
@@ -459,7 +459,7 @@ const selectedEditFile = ref<File | null>(null)
 const currentAlbumId = ref<number | null>(null)
 const dropdownStates = ref<{ [key: number]: boolean }>({})
 
-const store = useUserStore()
+const store = useFriendStore()
 
 const userId = store.getUserInfo?.pkId
 
@@ -610,8 +610,6 @@ const handleEditAlbum = async () => {
       coverUrl: uploadedCoverUrl,
       visibleScope: editVisibleScope.value === 'public' ? 1 : 3
     }
-
-    console.log('提交的相册数据:', photoAlbum)
 
     await editPhotoAlbumApi(photoAlbum)
 
